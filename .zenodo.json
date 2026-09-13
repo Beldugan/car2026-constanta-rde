@@ -4,14 +4,32 @@
   "license": "cc-by-4.0",
   "language": "eng",
   "title": "Real-driving data and models for Constanța: OBD-II records, vehicle consumption models and SUMO–HBEFA4 scenarios",
-  "description": "<p>Data and code accompanying the paper <em>Driving cycles recorded in Constanța and model estimates of fuel consumption and emissions for SI and CI vehicles</em>, presented at the 36th SIAR International Congress of Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.</p><p>The deposit contains the processed 1 Hz driving records of three routes measured in Constanța with two Euro 4 passenger cars, the original Torque Pro exports, the derived consumption series, the SUMO scenario configuration with its five-seed results, and the scripts that reproduce every table and every figure of the paper.</p><p>Each route–vehicle combination was traversed once; there are no repeated runs and between-run dispersion cannot be derived from this dataset. Position columns have been removed from the published records for privacy; route geometry is provided separately, thinned and trimmed at both ends. The street network is derived from OpenStreetMap and is not redistributed: the README gives the bounding box and the NETCONVERT command that regenerate it.</p><p>Data files are released under CC BY 4.0; the scripts in <code>code/</code> are released under the MIT Licence, as stated in the README and in LICENSE-CODE.txt.</p>",
+  "description": "<p>Data and code accompanying the paper <em>Driving cycles recorded in Constanța and model estimates of fuel consumption and emissions for SI and CI vehicles</em>, presented at the 36th SIAR International Congress of Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.</p><p>The deposit contains the processed 1 Hz driving records of three routes measured in Constanța with two Euro 4 passenger cars, the original Torque Pro exports, the derived consumption series, the SUMO scenario configuration with its five-seed results, and the scripts that recompute the derived tables and figures. Two exceptions are stated in the README: figure 1 needs the position columns, which are not published, and tables 9 and 10 need the street network, which is not redistributed.</p><p>Each route–vehicle combination was traversed once; there are no repeated runs and between-run dispersion cannot be derived from this dataset. Position columns have been removed from the published records for privacy; route geometry is provided separately, thinned and trimmed at both ends. The street network is derived from OpenStreetMap and is not redistributed: the README gives a dated Overpass query and the NETCONVERT command that regenerate the exact network used here.</p><p>Data files are released under CC BY 4.0; the scripts in <code>code/</code> are released under the MIT Licence, as stated in the README and in LICENSE-CODE.txt.</p>",
   "creators": [
-    { "name": "Beldugan, A. M.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" },
-    { "name": "Dordea, T.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" },
-    { "name": "Melnic, L.-V.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" },
-    { "name": "Tudor, C.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" },
-    { "name": "Ionascu, S. L.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" },
-    { "name": "Stania, L.", "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering" }
+    {
+      "name": "Beldugan, A. M.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    },
+    {
+      "name": "Dordea, T.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    },
+    {
+      "name": "Melnic, L.-V.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    },
+    {
+      "name": "Tudor, C.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    },
+    {
+      "name": "Ionascu, S. L.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    },
+    {
+      "name": "Stania, L.",
+      "affiliation": "Ovidius University of Constanța, Faculty of Mechanical, Industrial and Maritime Engineering"
+    }
   ],
   "keywords": [
     "real driving emissions",
@@ -27,5 +45,5 @@
     "Constanța",
     "Romania"
   ],
-  "notes": "Processed 1 Hz records, raw OBD-II exports, SUMO configuration and analysis scripts. Simulations were run with Eclipse SUMO 1.27.1. Fleet composition follows Eurostat road_eqs_carpda (2024) for the fuel split and the air-quality study of the municipality of Constanța (2024) for the distribution over emission standards."
+  "notes": "Processed 1 Hz records, raw OBD-II exports, SUMO configuration and analysis scripts. The whole consumption chain — speed-to-engine-speed relation, Willans calibration, cross-route predictions, out-of-sample check, thermal comparison and electric-vehicle energy balance — is in model_consum_CAR2026.py, whose header states the conventions that fix the result. Simulations were run with Eclipse SUMO 1.27.1. Fleet composition follows Eurostat road_eqs_carpda (2024) for the fuel split and the air-quality study of the municipality of Constanța (Amzu R et al. 2021, version 2.1) for the distribution over emission standards."
 }
