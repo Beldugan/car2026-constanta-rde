@@ -1,15 +1,15 @@
-traseu,vehicul,statut,clasa,distanta_km,v_medie_kmh,consum_l_100km,CO2_g_km
-R_A — urban central (Brătianu–Ferdinand–Mamaia),MAS benzină,măsurat,urban (≤60),11.93,18.7,11.29,266.7
-R_A — urban central (Brătianu–Ferdinand–Mamaia),MAS benzină,măsurat,rural (60–90),1.47,66.0,7.08,167.1
-R_A — urban central (Brătianu–Ferdinand–Mamaia),MAC diesel,extrapolat,urban (≤60),11.93,18.7,7.75,204.5
-R_A — urban central (Brătianu–Ferdinand–Mamaia),MAC diesel,extrapolat,rural (60–90),1.47,66.0,4.04,106.7
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAS benzină,extrapolat,urban (≤60),17.79,37.8,7.17,169.4
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAS benzină,extrapolat,rural (60–90),16.59,83.0,6.15,145.1
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAS benzină,extrapolat,autostradă (>90),9.9,95.3,6.79,160.4
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAC diesel,estimat din măsurători,urban (≤60),17.79,37.8,4.37,115.4
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAC diesel,estimat din măsurători,rural (60–90),16.59,83.0,4.57,120.6
-R_DN3 — mixt (Constanța–Murfatlar–retur),MAC diesel,estimat din măsurători,autostradă (>90),9.9,95.3,5.45,143.8
-R_B — radial litoral (Mamaia–Năvodari),MAS benzină,măsurat,urban (≤60),13.16,28.4,9.49,224.1
-R_B — radial litoral (Mamaia–Năvodari),MAS benzină,măsurat,rural (60–90),4.21,65.3,7.07,166.9
-R_B — radial litoral (Mamaia–Năvodari),MAC diesel,extrapolat,urban (≤60),13.16,28.4,6.54,172.5
-R_B — radial litoral (Mamaia–Năvodari),MAC diesel,extrapolat,rural (60–90),4.21,65.3,4.5,118.9
+traseu,vehicul,statut,clasa,distanta_km,consum_l_100km,CO2_g_km
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAS benzină,măsurat,urban (≤60),11.93,11.29,266.7
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAC diesel,extrapolat,urban (≤60),11.93,7.60,200.6
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAS benzină,măsurat,rural (60–90),1.47,7.08,167.1
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAC diesel,extrapolat,rural (60–90),1.47,3.97,104.9
+R_B — radial litoral (Mamaia–Năvodari),MAS benzină,măsurat,urban (≤60),13.16,9.49,224.1
+R_B — radial litoral (Mamaia–Năvodari),MAC diesel,extrapolat,urban (≤60),13.16,6.40,168.8
+R_B — radial litoral (Mamaia–Năvodari),MAS benzină,măsurat,rural (60–90),4.21,7.07,166.9
+R_B — radial litoral (Mamaia–Năvodari),MAC diesel,extrapolat,rural (60–90),4.21,4.43,116.9
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAS benzină,extrapolat,urban (≤60),17.79,7.35,173.5
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAC diesel,măsurat,urban (≤60),17.79,4.37,115.4
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAS benzină,extrapolat,rural (60–90),16.59,6.26,147.8
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAC diesel,măsurat,rural (60–90),16.59,4.57,120.6
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAS benzină,extrapolat,autostradă (>90),9.90,6.89,162.8
+R_DN3 — mixt (Constanța–DN3–Murfatlar),MAC diesel,măsurat,autostradă (>90),9.90,5.45,143.8

@@ -259,12 +259,21 @@ def fig5(d):
 
 
 # ------------------------------------------------------------------ figura 6
-REF = {"R_A": 10.83, "R_B": 8.90, "R_DN3": 4.69}
-IN_SAMPLE = {"R_A": -2.1, "R_B": -7.1, "R_DN3": +0.7}
-OUT_SAMPLE = {"R_B": -11.8}
+def _calibrare():
+    """Abaterile figurii 6 se citesc din fișierul produs de
+    model_consum_CAR2026.py; nicio valoare nu este scrisă aici."""
+    c = citeste(os.path.join(DIR_RUTE, "calibrare_rezultate.csv"))
+    ins = c[c.fel == "in-sample"]
+    out = c[c.fel == "out-of-sample"]
+    REF = {r.traseu: float(r.referinta_l_100km) for r in ins.itertuples()}
+    zero = lambda x: 0.0 if abs(x) < 0.05 else x
+    IN = {r.traseu: zero(float(r.abatere_pct)) for r in ins.itertuples()}
+    OUT = {r.traseu: zero(float(r.abatere_pct)) for r in out.itertuples()}
+    return REF, IN, OUT
 
 
 def fig6():
+    REF, IN_SAMPLE, OUT_SAMPLE = _calibrare()
     et = ["R$_\\mathrm{A}$", "R$_\\mathrm{B}$", "R$_\\mathrm{DN3}$"]
     k = ["R_A", "R_B", "R_DN3"]
     x = np.arange(3)

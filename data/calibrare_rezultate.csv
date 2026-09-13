@@ -1,0 +1,5 @@
+traseu,referinta_l_100km,model_l_100km,abatere_pct,fel
+R_A,10.83,10.39,-4.1,in-sample
+R_B,8.90,8.01,-10.0,in-sample
+R_DN3,4.69,4.69,-0.0,in-sample
+R_B,8.90,7.85,-11.8,out-of-sample

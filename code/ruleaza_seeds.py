@@ -17,6 +17,9 @@ Scrie:
   - `seeds_sinteza.csv`     — media ± SD pe scenariu și variațiile față de S0;
   - `seeds_pe_clase.csv`    — factorii pe clasă de vehicul din scenariul de
                               referință, media ± SD (Tabelul 9 din lucrare);
+  - `seeds_contorizare.csv` — contorizarea completă a vehiculelor: încărcate,
+                              inserate, parcursuri încheiate, rămase în rețea la
+                              final, neinserate și teleportări, pe cauze;
   - `ti_<scenariu>_seed<N>.xml` — ieșirile brute, păstrate pentru verificare.
 
 Verificare încorporată: factorul de CO2 al scenariului S0 trebuie să iasă în
@@ -90,15 +93,24 @@ def citeste(cale):
     vtip = None
     for ev, el in ET.iterparse(cale, events=("start", "end")):
         if ev == "start" and el.tag == "tripinfo":
-            vtip = el.get("vType")
-            km = float(el.get("routeLength", 0.0)) / 1000.0
-            tot["veh"] += 1
-            tot["km"] += km
-            c = pe_clasa.setdefault(vtip, {"veh": 0, "km": 0.0, "CO2": 0.0,
-                                           "NOx": 0.0, "PMx": 0.0})
-            c["veh"] += 1
-            c["km"] += km
+            # cu --tripinfo-output.write-unfinished apar si vehiculele care nu
+            # si-au terminat parcursul; ele nu au atributul `arrival`. Factorii
+            # de emisie se calculeaza numai pe parcursurile incheiate, ca sa
+            # ramana comparabili intre scenarii.
+            incheiat = el.get("arrival") not in (None, "", "-1", "-1.00")
+            vtip = el.get("vType") if incheiat else None
+            if incheiat:
+                km = float(el.get("routeLength", 0.0)) / 1000.0
+                tot["veh"] += 1
+                tot["km"] += km
+                c = pe_clasa.setdefault(vtip, {"veh": 0, "km": 0.0, "CO2": 0.0,
+                                               "NOx": 0.0, "PMx": 0.0})
+                c["veh"] += 1
+                c["km"] += km
         elif ev == "end" and el.tag == "emissions":
+            if vtip is None:          # parcurs neincheiat: se ignora
+                el.clear()
+                continue
             co2 = float(el.get("CO2_abs", 0.0))
             nox = float(el.get("NOx_abs", 0.0))
             pmx = float(el.get("PMx_abs", 0.0))
@@ -126,11 +138,66 @@ def citeste(cale):
     return factori(tot), {k: factori(v) for k, v in pe_clasa.items() if v["km"] > 0}
 
 
+def intra_in_dir_sumo():
+    """Scriptul foloseste nume de fisiere relative, deci trebuie sa ruleze din
+    folderul care contine configuratia SUMO. Il cauta si intra in el, ca sa poata
+    fi lansat si din radacina depozitului (`python code/ruleaza_seeds.py`)."""
+    aici = os.path.dirname(os.path.abspath(__file__))
+    candidati = [os.environ.get("CAR2026_SUMO"), os.getcwd(),
+                 os.path.join(os.getcwd(), "sumo"),
+                 os.path.join(os.getcwd(), ".."),
+                 os.path.join(aici, "..", "sumo"), aici]
+    for c in candidati:
+        if not c:
+            continue
+        c = os.path.abspath(c)
+        if all(os.path.isfile(os.path.join(c, f))
+               for f in ("vtypes.add.xml", "routes_S0.rou.xml")):
+            if c != os.path.abspath(os.getcwd()):
+                print("Folderul de lucru SUMO:", c)
+            os.chdir(c)
+            if not os.path.isfile("constanta.net.xml"):
+                print("ATENTIE: constanta.net.xml lipseste din acest folder.\n"
+                      "Reteaua este derivata din OpenStreetMap si nu se "
+                      "redistribuie; vezi README-ul pentru interogarea Overpass\n"
+                      "datata si comanda NETCONVERT care o regenereaza.")
+            return
+    print("Nu am gasit folderul cu configuratia SUMO (vtypes.add.xml si "
+          "routes_S0.rou.xml).\nRuleaza din folderul `sumo/` al depozitului sau "
+          "seteaza CAR2026_SUMO catre el.")
+    sys.exit(1)
+
+
+def citeste_statistici(cale):
+    """Contorizarea vehiculelor din fișierul --statistic-output:
+      loaded    — vehicule create din definițiile de flux;
+      inserted  — efectiv introduse în rețea;
+      running   — încă în rețea la sfârșitul simulării;
+      waiting   — rămase în coada de inserție, niciodată introduse;
+      teleports — mutări forțate, cu defalcarea pe cauze."""
+    if not os.path.isfile(cale):
+        return None
+    try:
+        r = ET.parse(cale).getroot()
+    except Exception:
+        return None
+    v = r.find("vehicles")
+    t = r.find("teleports")
+    if v is None:
+        return None
+    d = {k: int(float(v.get(k, 0))) for k in ("loaded", "inserted", "running",
+                                              "waiting")}
+    for k in ("total", "jam", "yield", "wrongLane"):
+        d["tp_" + k] = int(float(t.get(k, 0))) if t is not None else 0
+    return d
+
+
 def ms(v):
     return (mean(v), stdev(v) if len(v) > 1 else 0.0)
 
 
 def main():
+    intra_in_dir_sumo()
     sumo = gaseste_sumo()
     if not sumo:
         print("Nu am găsit executabilul sumo. Rulează:  pip install eclipse-sumo")
@@ -141,21 +208,25 @@ def main():
     if linie:
         print(linie[0], "\n")
 
-    rez, rez_clase = {}, {}
+    rez, rez_clase, rez_stat = {}, {}, {}
     linii = ["scenariu,seed,vehicule,veh_km,CO2_g_km,NOx_mg_km,PM_mg_km"]
     for s in SCENARII:
         rou = "routes_%s.rou.xml" % s
         if not os.path.isfile(rou):
             print("%s: lipsește %s — sar peste" % (s, rou))
             continue
-        rez[s], rez_clase[s] = [], []
+        rez[s], rez_clase[s], rez_stat[s] = [], [], []
         for sd in SEEDS:
             ies = "ti_%s_seed%d.xml" % (s, sd)
+            stat = "st_%s_seed%d.xml" % (s, sd)
             cmd = [sumo, "-n", "constanta.net.xml", "-r", rou,
                    "-a", "vtypes.add.xml",
                    "--device.emissions.probability", "1",
                    "--seed", str(sd),
                    "--tripinfo-output", ies,
+                   "--tripinfo-output.write-unfinished", "true",
+                   "--statistic-output", stat,
+                   "--duration-log.statistics", "true",
                    "--time-to-teleport", "300",
                    "--ignore-junction-blocker", "20",
                    "--begin", "0", "--end", str(SFARSIT),
@@ -172,10 +243,16 @@ def main():
                 continue
             rez[s].append(t)
             rez_clase[s].append(pc)
+            st = citeste_statistici(stat)
+            if st:
+                rez_stat[s].append(st)
             linii.append("%s,%d,%d,%.1f,%.2f,%.2f,%.3f" % (
                 s, sd, t["vehicule"], t["veh_km"], t["CO2_g_km"],
                 t["NOx_mg_km"], t["PM_mg_km"]))
-            print("CO2 %.1f g/km" % t["CO2_g_km"])
+            print("CO2 %.1f g/km%s" % (
+                t["CO2_g_km"],
+                "" if not st else "  (inserate %d, incheiate %d, in retea %d, teleportari %d)"
+                % (st["inserted"], t["vehicule"], st["running"], st["tp_total"])))
 
     open("seeds_rezultate.csv", "w", encoding="utf8").write("\n".join(linii) + "\n")
 
@@ -232,7 +309,34 @@ def main():
                        len(a["CO2_g_km"])))
     open("seeds_pe_clase.csv", "w", encoding="utf8").write("\n".join(out2) + "\n")
 
-    print("\nScrise: seeds_rezultate.csv, seeds_sinteza.csv, seeds_pe_clase.csv")
+    # ---------------- contorizarea completa a vehiculelor -------------------
+    out3 = ["scenariu,incarcate,inserate,incheiate,in_retea_la_final,neinserate,"
+            "teleportari,teleportari_blocaj,teleportari_cedare,teleportari_banda,replicari"]
+    print("\n--- Contorizarea vehiculelor (medii pe seed-uri) ---")
+    print("%-9s %9s %9s %10s %11s %11s %12s" % (
+        "scenariu", "încărcate", "inserate", "încheiate", "în rețea", "neinserate",
+        "teleportări"))
+    for s_ in SCENARII:
+        if not rez_stat.get(s_):
+            continue
+        n = len(rez_stat[s_])
+        g = lambda k: mean(x[k] for x in rez_stat[s_])
+        incheiate = mean(x["vehicule"] for x in rez[s_]) if rez.get(s_) else 0
+        print("%-9s %9.1f %9.1f %10.1f %11.1f %11.1f %12.1f" % (
+            s_, g("loaded"), g("inserted"), incheiate, g("running"), g("waiting"),
+            g("tp_total")))
+        out3.append("%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d" % (
+            s_, g("loaded"), g("inserted"), incheiate, g("running"), g("waiting"),
+            g("tp_total"), g("tp_jam"), g("tp_yield"), g("tp_wrongLane"), n))
+    if len(out3) > 1:
+        open("seeds_contorizare.csv", "w", encoding="utf8").write("\n".join(out3) + "\n")
+        print("   încheiate = parcursuri complete; factorii de emisie se calculează")
+        print("   numai pe acestea. inserate − încheiate − în rețea = vehicule pierdute.")
+    else:
+        print("   (fișierele de statistică lipsesc — verifică opțiunea --statistic-output)")
+
+    print("\nScrise: seeds_rezultate.csv, seeds_sinteza.csv, seeds_pe_clase.csv,"
+          " seeds_contorizare.csv")
     if rez.get("S0"):
         c = mean(x["CO2_g_km"] for x in rez["S0"])
         if not (100 < c < 600):

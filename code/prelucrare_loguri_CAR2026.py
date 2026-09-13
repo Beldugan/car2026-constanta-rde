@@ -95,6 +95,16 @@ LOGURI_LIVRATE = {
 }
 SURSE = {"RUTA_A": ["A_pre", "A_pre2", "A"], "RUTA_B": ["B"], "DIESEL": ["D"]}
 
+# Ferestrele analizate, asa cum sunt raportate in tabelul 2 al lucrarii. Ele sunt
+# proprietatea inregistrarii publicate: fisierele brute incep mai devreme si se
+# termina mai tarziu decat parcurgerea analizata, iar fara aplicarea lor rerun()
+# pastreaza tronsoane din afara ferestrei si nu reproduce durata publicata.
+FERESTRE = {
+    "RUTA_A": ("2026-04-02 11:47:57", "2026-04-02 13:10:43"),
+    "RUTA_B": ("2026-04-02 15:28:27", "2026-04-02 16:05:55"),
+    "DIESEL": ("2026-09-11 09:14:22", "2026-09-11 10:00:49"),
+}
+
 LUNI = {"ian": 1, "feb": 2, "mar": 3, "apr": 4, "mai": 5, "iun": 6, "iul": 7,
         "aug": 8, "sept": 9, "sep": 9, "oct": 10, "noi": 11, "nov": 11, "dec": 12}
 
@@ -186,7 +196,10 @@ def la_1hz(t, v, lat, lon):
     OBLIGATORIE: esantionarea bruta a logurilor din aprilie este ~1,77 s, nu 1 s.
     Fara acest pas acceleratiile si RPA sunt supraestimate cu ~77%."""
     ts = (t - t.iloc[0]).dt.total_seconds()
-    grid = np.arange(0, ts.iloc[-1] + 1e-9, 1.0 / FS)
+    # Ultima secunda a tronsonului se pastreaza: fara rotunjirea in sus, un
+    # tronson care se incheie la 1010,4 s ar da 1011 esantioane in loc de 1012 si
+    # fiecare segment ar pierde o secunda fata de inregistrarea publicata.
+    grid = np.arange(0, np.ceil(ts.iloc[-1] - 1e-9) + 1e-9, 1.0 / FS)
     out = pd.DataFrame({
         "t_rel_s": grid,
         "timestamp": [t.iloc[0] + pd.Timedelta(seconds=float(x)) for x in grid],
@@ -340,44 +353,69 @@ def audit():
 
 # ----------------------------------------------------------------------- RERUN
 def rerun():
-    """Reface prelucrarea de la zero: 1 Hz + segmentare la goluri > T_SEG.
-    Nu se elimina nicio oprire; se elimina doar intervalele fara date."""
+    """Reface prelucrarea de la zero, pe cele trei inregistrari publicate:
+    concatenarea surselor, decuparea ferestrei analizate din tabelul 2,
+    segmentarea la goluri > T_SEG si reesantionarea la 1 Hz. Nu se elimina
+    nicio oprire; se elimina doar intervalele fara date."""
     antet = antet_referinta()
     ies_dir = os.path.join(DIR_RUTE, "reprocesat")
     os.makedirs(ies_dir, exist_ok=True)
-    for k, f in LOGURI_BRUTE.items():
-        cale = os.path.join(DIR_BRUT, f)
-        if not os.path.exists(cale):
+    for ruta, chei in SURSE.items():
+        bucati = []
+        for k in chei:
+            cale = os.path.join(DIR_BRUT, LOGURI_BRUTE[k])
+            if os.path.exists(cale):
+                bucati.append(canale(citeste_brut(cale, antet)))
+        if not bucati:
+            print(f"{ruta}: nicio sursa disponibila -> sarit")
             continue
-        t, v, lat, lon = canale(citeste_brut(cale, antet))
+        t = pd.concat([b[0] for b in bucati], ignore_index=True)
+        v = pd.concat([b[1] for b in bucati], ignore_index=True)
+        lat = pd.concat([b[2] for b in bucati], ignore_index=True)
+        lon = pd.concat([b[3] for b in bucati], ignore_index=True)
+        o = np.argsort(t.values, kind="stable")
+        t, v = t.iloc[o].reset_index(drop=True), v.iloc[o].reset_index(drop=True)
+        lat = lat.iloc[o].reset_index(drop=True)
+        lon = lon.iloc[o].reset_index(drop=True)
+
+        a0, a1 = (pd.Timestamp(x) for x in FERESTRE[ruta])
+        m = (t >= a0) & (t <= a1)
+        t, v = t[m].reset_index(drop=True), v[m].reset_index(drop=True)
+        lat, lon = lat[m].reset_index(drop=True), lon[m].reset_index(drop=True)
+        if len(t) < 2:
+            print(f"{ruta}: fereastra {a0}-{a1} nu contine date -> sarit")
+            continue
+
         G = goluri(t, lat, lon)
-        # reesantionare pe fiecare tronson continuu, separat
         limite = [t.iloc[0]] + [x for g in G for x in (g[0], g[1])] + [t.iloc[-1]]
         parti, seg = [], 0
         for a, b in zip(limite[::2], limite[1::2]):
-            m = (t >= a) & (t <= b)
-            if m.sum() < 2:
+            mm = (t >= a) & (t <= b)
+            if mm.sum() < 2:
                 continue
-            p = la_1hz(t[m].reset_index(drop=True), v[m].reset_index(drop=True),
-                       lat[m].reset_index(drop=True), lon[m].reset_index(drop=True))
+            p = la_1hz(t[mm].reset_index(drop=True), v[mm].reset_index(drop=True),
+                       lat[mm].reset_index(drop=True), lon[mm].reset_index(drop=True))
             p["segment"] = seg
             seg += 1
             parti.append(p)
         if not parti:
-            print(f"{f}: prea putine date -> exclus")
+            print(f"{ruta}: prea putine date -> exclus")
             continue
         d = pd.concat(parti, ignore_index=True)
-        if d["stationare"].mean() == 1.0:
-            print(f"{f}: integral stationar (vehicul imobil) -> exclus")
-            continue
         d["dist_cum_m"] = (d["v_kmh"] / 3.6).cumsum()
         d["a_ms2"] = d["v_kmh"].diff().fillna(0) / 3.6
         d.loc[d["segment"].diff() != 0, "a_ms2"] = 0.0
-        ies = os.path.join(ies_dir, "reproc_" + f)
+        ies = os.path.join(ies_dir, "reproc_" + LOGURI_LIVRATE[ruta])
         d.to_csv(ies, index=False, encoding="utf-8")
-        print(f"{f}: {len(d)} s pastrati in {seg} segment(e), "
-              f"{d['dist_cum_m'].max()/1000:.2f} km, "
-              f"stationare {100*d['stationare'].mean():.1f}% -> {ies}")
+        mesaj = (f"{ruta}: {len(d)} s in {seg} segment(e), "
+                 f"{d['dist_cum_m'].max()/1000:.2f} km, stationare "
+                 f"{100*d['stationare'].mean():.1f}%")
+        pub = os.path.join(DIR_RUTE, LOGURI_LIVRATE[ruta])
+        if os.path.exists(pub):
+            L = citeste_livrat(pub)
+            ok = "identic" if len(L) == len(d) else f"PUBLICAT {len(L)} s"
+            mesaj += f" | fata de inregistrarea publicata: {ok}"
+        print(mesaj + f" -> {ies}")
 
 
 if __name__ == "__main__":
