@@ -1,0 +1,7 @@
+   *.pyc
+   __pycache__/
+   ti_*.xml
+   sum_*.xml
+   em_*.xml
+   *.net.xml
+   *.osm
