@@ -1,0 +1,7 @@
+traseu,vehicul,statut,distanta_km,durata_s,v_medie_kmh,stationare_pct,RPA_m_s2,E_roata_kWh_100km,consum_l_100km,CO2_g_km
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAS benzină — Opel Astra 1.6i,măsurat,13.39,2378,20.3,32.2,0.25,12.3,10.83,255.8
+R_A — urban central (Brătianu–Ferdinand–Mamaia),MAC diesel — VW Touran 2.0 TDI,extrapolat,13.39,2378,20.3,32.2,0.25,16.46,7.35,193.8
+R_DN3 — mixt (Constanța–Murfatlar–retur),MAS benzină — Opel Astra 1.6i,extrapolat,44.29,2788,57.2,11.3,0.089,10.14,6.7,158.3
+R_DN3 — mixt (Constanța–Murfatlar–retur),MAC diesel — VW Touran 2.0 TDI,estimat din măsurători,44.29,2788,57.2,11.3,0.089,12.97,4.69,123.7
+R_B — radial litoral (Mamaia–Năvodari),MAS benzină — Opel Astra 1.6i,măsurat,17.37,1897,33.0,14.4,0.24,12.02,8.9,210.2
+R_B — radial litoral (Mamaia–Năvodari),MAC diesel — VW Touran 2.0 TDI,extrapolat,17.37,1897,33.0,14.4,0.24,16.03,6.04,159.5

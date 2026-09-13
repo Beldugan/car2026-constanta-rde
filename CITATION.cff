@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: Real-driving data and models for Constanța (CAR2026)
+message: If you use this dataset, please cite both the dataset and the paper.
+type: dataset
+authors:
+  - family-names: Beldugan
+    given-names: A. M.
+    affiliation: Ovidius University of Constanța
+  - family-names: Dordea
+    given-names: T.
+  - family-names: Melnic
+    given-names: L.-V.
+  - family-names: Tudor
+    given-names: C.
+  - family-names: Ionascu
+    given-names: S. L.
+  - family-names: Stania
+    given-names: L.
+license: CC-BY-4.0
+keywords:
+  - real driving emissions
+  - OBD-II
+  - driving cycle
+  - SUMO
+  - HBEFA
+  - Constanța

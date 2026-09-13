@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- S2 - 20 % dintre autoturisme inlocuite cu vehicule electrice -->
+<!-- Repartitia pe combustibil: 48,0 % benzina / 52,0 % motorina, din Eurostat road_eqs_carpda,
+     autoturisme, Romania, 2024: benzina 3.988.219 si motorina 4.322.854 din 8.449.781 in total
+     (restul de 138.708 = combustibili alternativi, exclusi si renormalizati pe benzina + motorina).
+     Repartitia pe norma de poluare: Studiul de calitate a aerului in municipiul Constanta (2024),
+     figura 5-6, autoturisme, date DRPCIV an de referinta 2018 — non-Euro 10 %, Euro 1 4 %, Euro 2 8 %,
+     Euro 3 19 %, Euro 4 36 %, Euro 5 18 %, Euro 6 5 %. Clasele anterioare normei Euro 3 (22 % din parc)
+     sunt reprezentate prin Euro 3, cea mai veche disponibila in setul HBEFA4 folosit. -->
+<routes>
+  <route id="r" edges="-15059280#1 -211777174#0 15059339#1 15059339#2 845387623 1037961828 845387622#0 845387622#1 849808942 849808941#0 849808941#1 845388706 1037961829 375727487#0 686944516 1037961830 375727489 686944514 211773552 375727484 1111539246 1111539247 849818813 849818811 358035798 849847280 353180134#0 353180134#1 375729491 1111539253 855559822 1111539254 220466666 375729492#0 375729492#1 1111564431 712485398 375729729 833585681 1101204756 833585680 833585678#0 375729730#0 375729730#1 850135596#0 850135596#1 375729727 1037961837 850135595 1018744687 1228630060 850135594 1368431055 850149531 1368431052 375729728#0 375729728#1 721861873 721863023 229495773#0 229495773#1 842076624 1040801544 1040801543 229495780#0 229495777#1 229495782 1037961838 1037961839 851450834 851450836 296324434#0 336347133 352603369#0 352603369#1 352603369#2 1173999384 336347136 -712280972#1 -712280972#0 -1035966618#1 -1035966618#0 -184393412#1 -184393412#0 -833581110 -830827013 830827014 1111530197 12115877 1422308001 712271252#1 712271252#2 712271252#3 712271252#4 712271252#5 712271252#6 1035966619 1009980427#0 1353183532 184899415#0 184899415#1 1035966614 151235600#3 1024843570 1353183526"/>
+  <flow id="f_g3" type="g3" route="r" begin="0" end="3600" vehsPerHour="79" departLane="best" departSpeed="max"/>
+  <flow id="f_g4" type="g4" route="r" begin="0" end="3600" vehsPerHour="69" departLane="best" departSpeed="max"/>
+  <flow id="f_g5" type="g5" route="r" begin="0" end="3600" vehsPerHour="34" departLane="best" departSpeed="max"/>
+  <flow id="f_g6" type="g6" route="r" begin="0" end="3600" vehsPerHour="10" departLane="best" departSpeed="max"/>
+  <flow id="f_d3" type="d3" route="r" begin="0" end="3600" vehsPerHour="85" departLane="best" departSpeed="max"/>
+  <flow id="f_d4" type="d4" route="r" begin="0" end="3600" vehsPerHour="75" departLane="best" departSpeed="max"/>
+  <flow id="f_d5" type="d5" route="r" begin="0" end="3600" vehsPerHour="38" departLane="best" departSpeed="max"/>
+  <flow id="f_d6" type="d6" route="r" begin="0" end="3600" vehsPerHour="10" departLane="best" departSpeed="max"/>
+  <flow id="f_ev" type="ev" route="r" begin="0" end="3600" vehsPerHour="100" departLane="best" departSpeed="max"/>
+</routes>

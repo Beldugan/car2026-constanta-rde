@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional>
+    <vType id="g3" accel="2.6" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_petrol_Euro-3" color="1,0.3,0.3"/>
+    <vType id="g4" accel="2.6" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_petrol_Euro-4" color="1,0.5,0.3"/>
+    <vType id="g5" accel="2.6" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_petrol_Euro-5" color="1,0.7,0.3"/>
+    <vType id="g6" accel="2.6" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_petrol_Euro-6ab" color="0.3,0.8,0.3"/>
+    <vType id="d3" accel="2.4" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_diesel_Euro-3" color="0.3,0.3,0.5"/>
+    <vType id="d4" accel="2.4" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_diesel_Euro-4" color="0.3,0.3,0.7"/>
+    <vType id="d5" accel="2.4" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_diesel_Euro-5" color="0.3,0.3,0.9"/>
+    <vType id="d6" accel="2.4" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_diesel_Euro-6ab" color="0.3,0.6,0.9"/>
+    <vType id="ev" accel="3.0" decel="4.5" sigma="0.5" length="4.5" maxSpeed="50" emissionClass="HBEFA4/PC_BEV" color="0.1,0.9,0.1"/>
+</additional>
