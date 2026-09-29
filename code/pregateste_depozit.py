@@ -195,8 +195,8 @@ README = """# Real-driving data and models for Constanța (CAR2026)
 Data and code accompanying the paper
 
 > A M Beldugan, T Dordea, L-V Melnic, C Tudor, S L Ionascu and L Stania,
-> *Driving cycles recorded in Constanța and model estimates of fuel consumption
-> and emissions for SI and CI vehicles*, 36th SIAR International Congress of
+> *Comparative Analysis of Real Driving Emissions for Spark Ignition and
+> Compression Ignition Vehicles on Urban Routes in Constanța*, 36th SIAR International Congress of
 > Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.
 
 `model_consum_CAR2026.py` holds the whole consumption chain in one place: the
@@ -468,7 +468,7 @@ license: CC-BY-4.0
 keywords:
   - real driving emissions
   - OBD-II
-  - driving cycle
+  - recorded driving profile
   - SUMO
   - HBEFA
   - Constanța
@@ -502,7 +502,7 @@ ZENODO = r"""{
   "license": "cc-by-4.0",
   "language": "eng",
   "title": "Real-driving data and models for Constanța: OBD-II records, vehicle consumption models and SUMO–HBEFA4 scenarios",
-  "description": "<p>Data and code accompanying the paper <em>Driving cycles recorded in Constanța and model estimates of fuel consumption and emissions for SI and CI vehicles</em>, presented at the 36th SIAR International Congress of Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.</p><p>The deposit contains the processed 1 Hz driving records of three routes measured in Constanța with two Euro 4 passenger cars, the original Torque Pro exports, the derived consumption series, the SUMO scenario configuration with its five-seed results, and the scripts that recompute the derived tables and figures. Two exceptions are stated in the README: figure 1 needs the position columns, which are not published, and tables 9 and 10 need the street network, which is not redistributed.</p><p>Each route–vehicle combination was traversed once; there are no repeated runs and between-run dispersion cannot be derived from this dataset. Position columns have been removed from the published records for privacy; route geometry is provided separately, thinned and trimmed at both ends. The street network is derived from OpenStreetMap and is not redistributed: the README gives a dated Overpass query and the NETCONVERT command that regenerate the exact network used here.</p><p>Data files are released under CC BY 4.0; the scripts in <code>code/</code> are released under the MIT Licence, as stated in the README and in LICENSE-CODE.txt.</p>",
+  "description": "<p>Data and code accompanying the paper <em>Comparative Analysis of Real Driving Emissions for Spark Ignition and Compression Ignition Vehicles on Urban Routes in Constanța</em>, presented at the 36th SIAR International Congress of Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.</p><p>The deposit contains the processed 1 Hz driving records of three routes measured in Constanța with two Euro 4 passenger cars, the original Torque Pro exports, the derived consumption series, the SUMO scenario configuration with its five-seed results, and the scripts that recompute the derived tables and figures. Two exceptions are stated in the README: figure 1 needs the position columns, which are not published, and tables 9 and 10 need the street network, which is not redistributed.</p><p>Each route–vehicle combination was traversed once; there are no repeated runs and between-run dispersion cannot be derived from this dataset. Position columns have been removed from the published records for privacy; route geometry is provided separately, thinned and trimmed at both ends. The street network is derived from OpenStreetMap and is not redistributed: the README gives a dated Overpass query and the NETCONVERT command that regenerate the exact network used here.</p><p>Data files are released under CC BY 4.0; the scripts in <code>code/</code> are released under the MIT Licence, as stated in the README and in LICENSE-CODE.txt.</p>",
   "creators": [
     {
       "name": "Beldugan, A. M.",
@@ -533,7 +533,7 @@ ZENODO = r"""{
     "real driving emissions",
     "on-road measurement",
     "OBD-II",
-    "driving cycle",
+    "recorded driving profile",
     "fuel consumption",
     "spark ignition",
     "compression ignition",
