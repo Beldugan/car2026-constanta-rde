@@ -3,8 +3,8 @@
 Data and code accompanying the paper
 
 > A M Beldugan, T Dordea, L-V Melnic, C Tudor, S L Ionascu and L Stania,
-> *Driving cycles recorded in Constanța and model estimates of fuel consumption
-> and emissions for SI and CI vehicles*, 36th SIAR International Congress of
+> *Comparative Analysis of Real Driving Emissions for Spark Ignition and
+> Compression Ignition Vehicles on Urban Routes in Constanța*, 36th SIAR International Congress of
 > Automotive and Transport Engineering (CAR2026), Pitești, 5–7 November 2026.
 
 `model_consum_CAR2026.py` holds the whole consumption chain in one place: the
@@ -201,7 +201,7 @@ Cite the dataset by its DOI and the paper above.
 
 ## Privacy note
 
-The 1 Hz records are published without latitude and longitude. Cumulative distance is the integral of speed, so the cycle parameters, the speed-class split and the model calculations do not use position: the Willans calibration and the modelled fuel rates are computed from the speed trace together with the vehicle parameters in table 1, and the SI reference consumption from the recorded mass air flow, all of which are published. What cannot be reproduced from these files is figure 1, the map-matched street names and the `dist_map_match_m` column, all of which need position. Route geometry is provided separately in `data/geometry/`, thinned to one point in five seconds and trimmed by 400 m at both ends, which is enough to place the routes on a map but not to identify the start and end addresses.
+The 1 Hz records are published without latitude and longitude. Cumulative distance is the integral of speed, so the driving-profile parameters, the speed-class split and the model calculations do not use position: the Willans calibration and the modelled fuel rates are computed from the speed trace together with the vehicle parameters in table 1, and the SI reference consumption from the recorded mass air flow, all of which are published. What cannot be reproduced from these files is figure 1, the map-matched street names and the `dist_map_match_m` column, all of which need position. Route geometry is provided separately in `data/geometry/`, thinned to one point in five seconds and trimmed by 400 m at both ends, which is enough to place the routes on a map but not to identify the start and end addresses.
 
 ## Contact
 
